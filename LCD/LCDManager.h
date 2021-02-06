@@ -4,7 +4,7 @@
 #include "Utils/Weather.h"
 #include "Dispatcher/Dispatcher.h"
 #include "Logger/Logger.h"
-#include "Dispatcher/Msg_UpdateSensorTemp.h"
+#include "Dispatcher/Msg_UpdateTemperatureInfo.h"
 #include "Dispatcher/Msg_UpdateWeather.h"
 
 class LCDManager : public Module

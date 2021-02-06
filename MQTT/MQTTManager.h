@@ -5,7 +5,7 @@
 #include "Dispatcher/Dispatcher.h"
 #include "Dispatcher/Msg_IncomingMQTT.h"
 #include "Dispatcher/Msg_IRCmd.h"
-#include "Dispatcher/Msg_UpdateSensorTemp.h"
+#include "Dispatcher/Msg_UpdateTemperatureInfo.h"
 
 class MQTTManager :	public Module
 {

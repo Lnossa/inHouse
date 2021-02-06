@@ -8,7 +8,7 @@
 #include "Dispatcher/Dispatcher.h"
 
 #define IN_PIN 7
-#define OUT_PIN 12
+#define OUT_PIN 1
 
 class IRManager : public Module
 {
@@ -24,7 +24,7 @@ private:
 	void fIRSend(const std::string& msg);
 
 protected:
-	//void fOnStart() override;
+	void fOnStart() override;
 	void fProcessMessage(std::shared_ptr<Msg> msg) override;
 
 public:

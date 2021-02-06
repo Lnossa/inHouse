@@ -4,18 +4,28 @@
 Date::Date()
 {
 	time_t now = time(0);
-	tm* date = localtime(&now);
+	mTime = localtime(&now);
 
-	mMonth = 1 + date->tm_mon;
-	mDay = date->tm_mday;
+	mYear = mTime->tm_year + 1900;
+	mMonth = 1 + mTime->tm_mon;
+	mDay = mTime->tm_mday;
 
-	mHour = date->tm_hour;
-	mMinute = date->tm_min;
-	mSec = date->tm_sec;
+	mHour = mTime->tm_hour;
+	mMinute = mTime->tm_min;
+	mSec = mTime->tm_sec;
 
-	mWeekDay = date->tm_wday;
+	mWeekDay = mTime->tm_wday;
 }
 
+tm* Date::fGetTime()
+{
+	return mTime;
+}
+
+int Date::fGetYear()
+{
+	return mYear;
+}
 
 int Date::fGetMonth()
 {

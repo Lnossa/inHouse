@@ -8,6 +8,11 @@ IRManager::IRManager() : Module()
 	fSetModuleId(IR);
 }
 
+void IRManager::fOnStart()
+{
+	
+}
+
 void IRManager::fProcessMessage(std::shared_ptr<Msg> msg)
 {
 	logging::INFO("IRManager >> Received %s.", msg->fGetTypeAsString());
@@ -63,7 +68,7 @@ void IRManager::fRead()
 
 void IRManager::fIRSend(const std::string& msg)
 {
-	wiringPiSetupPhys();
+	//wiringPiSetupPhys();
 	pinMode(OUT_PIN, PWM_OUTPUT);
 	pwmSetMode(PWM_MODE_MS);
 	pwmSetClock(84);

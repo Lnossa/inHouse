@@ -4,6 +4,8 @@
 class Date
 {
 private:
+	tm* mTime;
+	int mYear;
 	int mMonth;
 	int mDay;
 	int mHour;
@@ -14,6 +16,8 @@ private:
 public:
 	Date();
 
+	tm* fGetTime();
+	int fGetYear();
 	int fGetMonth();
 	int fGetDay();
 	int fGetHour();

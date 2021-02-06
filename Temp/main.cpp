@@ -8,8 +8,8 @@
 #include "TemperatureManager.h"
 int main()
 {
-	//double temp = TempSensor::getTemperature();
-	//double hum = TempSensor::getHumidity();
+	//double temp = TempSensor::fGetSensorTemperature();
+	//double hum = TempSensor::fGetSensorHumidity();
 
 	//std::cout << "Temp: " << std::fixed << std::setprecision(1) << temp << std::endl;
 	//std::cout << "Humidity: " << hum << "%" << std::endl;
@@ -31,7 +31,7 @@ int main()
 //	return tSensorTemp;
 //}
 //
-//double getHumidity(int fd)
+//double fGetSensorHumidity(int fd)
 //{
 //	unsigned char buf[4];
 //	wiringPiI2CWrite(fd, CMD_HUM);

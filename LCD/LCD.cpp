@@ -139,6 +139,7 @@ void LCDDriver::lcdSetCursorBlink(bool on)
 
 void LCDDriver::lcdPuts(const char* string) 
 {
+	logging::TRACE("LCD >> Write to screen: %s", string);
 	while (*string)
 		putChar(*string++);
 }
@@ -173,4 +174,21 @@ void LCDDriver::lcdPrintCustomChar(int pos)
 {
 	uint8_t c = 0x07 & pos;
 	putChar(c);
+}
+
+void LCDDriver::Lock() 
+{
+	std::chrono::seconds wait(1);
+	if (!mMutex.try_lock_for(wait))
+	{
+		logging::ERROR("LCD >> Failed try_lock_for(%d)! Doing simple lock()...", wait);
+		mMutex.lock();
+	}
+	logging::TRACE("LCDDriver >> Mutex || Obtained lock.");
+}
+
+void LCDDriver::Unlock()
+{
+	mMutex.unlock();
+	logging::TRACE("LCD >> Mutex || Released lock");
 }

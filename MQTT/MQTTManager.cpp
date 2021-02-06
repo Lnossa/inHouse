@@ -13,19 +13,19 @@ void MQTTManager::fOnStart()
 	pIncomingTempMqtt = new Mqtt("TempMqtt", "tempCmdTpc", "localhost", 1883);
 	pIncomingTempMqtt->fSubscribe();
 
-	pIncomingTempMqtt = new Mqtt("SensorTempMqtt", "tempStTpc", "localhost", 1883);
+	pOutgoingTempMqtt = new Mqtt("SensorTempMqtt", "tempStTpc", "localhost", 1883);
 }
 void MQTTManager::fProcessMessage(std::shared_ptr<Msg> msg)
 {
 	logging::INFO("MQTTManager >> Received %s.", msg->fGetTypeAsString());
 	switch (msg->fGetType())
 	{
-	case MsgType_UpdateSensorTemp:
+	case MsgType_UpdateTemperatureInfo:
 	{
-		Msg_UpdateSensorTemp* pMsg = static_cast<Msg_UpdateSensorTemp*>(msg.get());
-		logging::TRACE("MQTTManager >> Sensor: Temp: %.1f Hum: %.1f", pMsg->fGetTypeAsString(), pMsg->getTemperature(), pMsg->getHumidity());
-		std::string sTemp = std::to_string(pMsg->getTemperature());
-		pIncomingTempMqtt->send_message(sTemp.c_str());
+		Msg_UpdateTemperatureInfo* pMsg = static_cast<Msg_UpdateTemperatureInfo*>(msg.get());
+		logging::TRACE("MQTTManager >> Sensor: Temp: %.1f Hum: %.1f, Heat: %s", pMsg->fGetSensorTemperature(), pMsg->fGetSensorHumidity(), pMsg->fGetIsHeating() ? "ON" : "OFF");
+		//std::string sTemp = std::to_string(pMsg->fGetSensorTemperature());
+		pOutgoingTempMqtt->send_message(pMsg->fFormatAsJSON());
 		break;
 	}
 	case MsgType_IncomingMQTT:
@@ -38,6 +38,13 @@ void MQTTManager::fProcessMessage(std::shared_ptr<Msg> msg)
 			irMsg.fBuildFromMQTTMsg(pMsg);
 			auto spMsg = std::make_shared<Msg_IRCmd>(irMsg);
 			gpDispatcher->fPostMessage(IR, spMsg);
+		}
+		if (strcmp(pMsg->fGetTopic().c_str(), "tempCmdTpc") == 0)
+		{
+			Msg_UpdateTemperatureInfo tempMsg;
+			tempMsg.fBuildFromMQTTMsg(pMsg);
+			auto spMsg = std::make_shared<Msg_UpdateTemperatureInfo>(tempMsg);
+			gpDispatcher->fPostMessage(Temp, spMsg);
 		}
 		break;
 	}

@@ -23,6 +23,7 @@ public:
 	Mqtt(const char* id, const char* _topic, const char* host, int port);
 	~Mqtt();
 	bool send_message(const char* _message);
+	bool send_message(std::shared_ptr<char> _message);
 	bool fSubscribe();
 	void on_message(const mosquitto_message* message);
 };

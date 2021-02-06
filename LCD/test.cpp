@@ -83,3 +83,11 @@ void LCDDriver::lcdTest(LCDDriver* pLCDDriver)
 		pLCDDriver->mMutex.unlock();
 	}
 }
+
+//int main()
+//{
+//	wiringPiSetup();
+//	LCDDriver x;
+//	x.lcdTest(&x);
+//	return 0;
+//}

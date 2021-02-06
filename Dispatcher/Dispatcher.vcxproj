@@ -83,7 +83,7 @@
     <ClCompile Include="Msg.cpp" />
     <ClCompile Include="Msg_IncomingMQTT.cpp" />
     <ClCompile Include="Msg_IRCmd.cpp" />
-    <ClCompile Include="Msg_UpdateSensorTemp.cpp" />
+    <ClCompile Include="Msg_UpdateTemperatureInfo.cpp" />
     <ClCompile Include="Msg_UpdateWeather.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -92,7 +92,7 @@
     <ClInclude Include="Msg.h" />
     <ClInclude Include="Msg_IncomingMQTT.h" />
     <ClInclude Include="Msg_IRCmd.h" />
-    <ClInclude Include="Msg_UpdateSensorTemp.h" />
+    <ClInclude Include="Msg_UpdateTemperatureInfo.h" />
     <ClInclude Include="Msg_UpdateWeather.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">

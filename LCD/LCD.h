@@ -4,6 +4,7 @@
 #include<thread>
 #include<mutex>
 #include "wiringPi.h"
+#include "Logger/Logger.h"
 
 #define RS 26 //Phys Pin 32;
 #define EN 31 //Phys Pin 28;
@@ -42,13 +43,12 @@ private:
 	bool mCursor = false;
 	bool mCursorBlink = false;
 	bool mDisplay = false;
+	std::recursive_timed_mutex mMutex;
 
 	void writeData(int data);
 	void putChar(int cmd);
 	void putCmd(uint8_t cmd);
 public:
-
-	std::mutex mMutex;
 
 	LCDDriver();
 	void lcdInit();
@@ -69,5 +69,8 @@ public:
 	void lcdPrintCustomChar(int pos);
 
 	void lcdTest(LCDDriver *pLCDDriver);
+
+	void Lock();
+	void Unlock();
 };
 

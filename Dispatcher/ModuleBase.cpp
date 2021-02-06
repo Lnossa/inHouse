@@ -119,7 +119,7 @@ const char* Module::fGetModuleName()
 
 void Module::fOnStart()
 {
-	logging::ERROR("Default onStart ?!", mModuleName);
+	logging::ERROR("Default onStart ?! %s", mModuleName);
 }
 
 std::thread::id Module::fGetThreadId()

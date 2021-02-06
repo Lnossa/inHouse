@@ -3,17 +3,22 @@
 #include <thread>
 #include <unistd.h>
 #include <sys/file.h>
+#include <signal.h>
+#include <execinfo.h>
 
 #include "IR/IR.h"
 #include "MQTT/MQTTManager.h"
 #include "LCD/LCDManager.h"
 #include "Temp/TemperatureManager.h"
 #include "Dispatcher/Dispatcher.h"
-#include "Dispatcher/Msg_UpdateSensorTemp.h"
 #include "Utils/Weather.h"
 #include "Utils/Date.h"
 #include "Logger/Logger.h"
 #include "IR/IR.h"
+
+void CreateLogFile();
+void fSigSegvHandler(int sig);
+
 
 int main()
 {
@@ -31,13 +36,17 @@ int main()
 
 	if (wiringPiSetup() == -1) {
 		logging::ERROR("wiringPiSetup() error!");
-		return 0;
+		return -1;
 	}
+
+	CreateLogFile();
 	
 	daemon(1, 1);
-	
-	logging::configure({ {"type", "file"}, {"file_name", "test.log"}, {"reopen_interval", "1"} });
+		
+	signal(SIGSEGV, fSigSegvHandler);
+		
 	logging::INFO("Program start. Main Thread Id: %d", std::this_thread::get_id());
+
 	gpDispatcher = new Dispatcher;
 
 	MQTTManager mqttModule;
@@ -60,8 +69,40 @@ int main()
 
 	while (true)
 	{
+		//Wait until 12 AM
+		Date dt;
+		tm* tomorrow = dt.fGetTime();
+		tomorrow->tm_mday += 1;
+		tomorrow->tm_hour = 0;
+		tomorrow->tm_min = 0;
+		tomorrow->tm_sec = 0;
+		std::this_thread::sleep_until(std::chrono::system_clock::from_time_t(mktime(tomorrow)));
 		std::this_thread::sleep_for(std::chrono::hours(24));
+		
+		CreateLogFile();
 	}
 }
 
 
+void fSigSegvHandler(int sig) {
+	void* array[10];
+	size_t size;
+
+	// get void*'s for all entries on the stack
+	size = backtrace(array, 10);
+
+	// print out all the frames to stderr
+	logging::ERROR("Error: signal %d:\n", sig);
+	backtrace_symbols_fd(array, size, STDOUT_FILENO);
+	exit(1);
+}
+
+void CreateLogFile()
+{
+	Date dt;
+	char logFileName[22];
+	snprintf(logFileName, 22, "log/%04d%02d%02d_%02d%02d.log", dt.fGetYear(), dt.fGetMonth(), dt.fGetDay(), dt.fGetHour(), dt.fGetMinute());
+
+	logging::configure({ {"type", "file"}, {"file_name", logFileName}, {"reopen_interval", "1"} });
+	logging::INFO("New logfile created -> %s", logFileName);
+}

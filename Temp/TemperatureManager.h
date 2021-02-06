@@ -3,7 +3,7 @@
 #include "TempSensor.h"
 #include "Utils/Weather.h"
 #include "Dispatcher/Dispatcher.h"
-#include "Dispatcher/Msg_UpdateSensorTemp.h"
+#include "Dispatcher/Msg_UpdateTemperatureInfo.h"
 #include "Dispatcher/Msg_UpdateWeather.h"
 
 class TemperatureManager : public Module
@@ -17,6 +17,7 @@ protected:
 	void fProcessMessage(std::shared_ptr<Msg> msg) override;
 
 private:
+	bool mIsHeating;
 	double mInsideTemperature;
 	double mInsideHumidity;
 	double mSetTemperature;
@@ -24,11 +25,13 @@ private:
 	
 	std::unique_ptr<TempSensor> pTempSensor;
 	std::unique_ptr<std::thread> mWeatherJob;
-	std::unique_ptr<std::thread> mSensorJob;
+	std::unique_ptr<std::thread> mTemperatureJob;
 
+	bool fCheckTemp();
 	void fReadFromSensor();
 	
 	void fStartWeatherJob();
-	void fStartSensorJob();
+	void fStartTemperatureJob();
+
 };
 

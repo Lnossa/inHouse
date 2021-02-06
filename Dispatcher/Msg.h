@@ -6,7 +6,7 @@
 enum MsgType
 {
 	MsgType_Undefined,
-	MsgType_UpdateSensorTemp,
+	MsgType_UpdateTemperatureInfo,
 	MsgType_UpdateWeather,
 	MsgType_IncomingMQTT,
 	MsgType_IRCmd
@@ -24,7 +24,7 @@ private:
 	std::vector<std::string> mvMsgNames =
 	{
 		"UNDEFINED",
-		"Msg_UpdateSensorTemp",
+		"Msg_UpdateTemperatureInfo",
 		"Msg_UpdateWeather",
 		"Msg_IncomingMQTT",
 		"Msg_IRCmd"
