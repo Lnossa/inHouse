@@ -36,5 +36,6 @@ addons:
 script: #chmod ugo+x build.sh && ./build.sh
   - sudo ln -s /usr/lib/aarch64-linux-gnu/libwiringPi.so  /usr/lib/libwiringPi.so
   - find /usr/lib/ -name "*wiring*"
+  - find /usr/lib/ -name "*json*"
   - cmake .
   - make
