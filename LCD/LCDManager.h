@@ -1,7 +1,6 @@
 #pragma once
 #include "LCD.h"
 #include "Utils/Date.h"
-#include "Utils/Weather.h"
 #include "Dispatcher/Dispatcher.h"
 #include "Logger/Logger.h"
 #include "Dispatcher/Msg_UpdateTemperatureInfo.h"

@@ -1,0 +1,1 @@
+add_library(RF SHARED main.cpp)

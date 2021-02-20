@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <string>
-#include <jsoncpp/json/json.h>
+#include <json/json.h>
 
 #include "HTTP.h"
 #include "Date.h"
