@@ -4,6 +4,15 @@ arch: arm64
 os: linux
 dist: xenial
 
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - cmake
+      
+      
 # env:
   # global:
   # - secure: BoabqL/7J/Xp991AUyEpOL9oWcf7kqEL/3JfJqtMTTmdvDdPjOZMLNCasl//qJa913Oq4J9mGDo2rkwNRHluceNHbevZtvLlOpWVlURvcNNpAhChBaaHqAUOJnBrf0eQYX3UN6IAqNNbzHH1D5QrhRHoeG7ZC7R2RtvYdlJ9Y3Mt730MgYCq8HxYHwW+0dUyWFcEJTS3gV/cZjIw/lj+TD14ZrdejzqURBZwpCNtYYRWCkQ2MMoLaf0Xc6rMUQx2Tr/L23uzLs8OHytIx3EMhXWt+5LjIssOQckMf2SqgJXCpq93Idl01JnvQybpIEf6uxBRaS6I0FL04puTjroOlJkjXtr4gqmmxrJ1SlWD22Fqa35/UZa4+hIfkSxjdHG4hqMDiwp6sJjm5vNIUnzEHIVFRnKaUhFHwDL9EpV2F9VCziguKQsJ8rXkMew1EqhoQGyzKoPQy4+D25Jrte+noSqFxvGLGtiqFYEHqGRHh8c1vzEgVZdq+fuhKPL5SpYesPHueYXVJcCAnCDKEOy4S/gcownsrIFxHPyu0CyNOZRpo3oZTlgZNHvNncPSjo5OUta4WLUdNWWRuzW8qhxE9eBG25CbSnRvoewnfyLXt08i20rxLNI/bXp1pF+XrDMDp7UEg2eebibaMYcNnpvw+KCnTCXPjyhr9fuBQY5If4w=
@@ -19,5 +28,6 @@ dist: xenial
     # branch_pattern: master
 
 script: #chmod ugo+x build.sh && ./build.sh
+  - cmake --version
   - cmake .
   - make
