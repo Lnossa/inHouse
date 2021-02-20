@@ -3,7 +3,7 @@ message("${PROJECT_SOURCE_DIR}")
 add_executable(inHouse main.cpp)
 
 add_library(wipi SHARED IMPORTED) # or STATIC instead of SHARED
-set_target_properties(bar PROPERTIES
+set_target_properties(wipi PROPERTIES
   IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/../lib/wiringpi/libwiringPi.so"
   INTERFACE_INCLUDE_DIRECTORIES "${PROJECT_SOURCE_DIR}/../lib/wiringpi/"
 )
