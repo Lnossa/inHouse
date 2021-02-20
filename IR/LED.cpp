@@ -14,7 +14,8 @@
 #include "LED.h"
 
 LED::LED(CallbackFunc cf) : 
-	Remote(cf)
+	Remote(cf),
+	pos(0)
 {
 	cState = RESET;
 };
