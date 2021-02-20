@@ -2,7 +2,7 @@ language: cpp
 compiler: g++
 arch: arm64
 os: linux
-dist: xenial
+dist: focal
 
 
 addons:
