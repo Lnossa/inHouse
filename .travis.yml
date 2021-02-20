@@ -11,6 +11,10 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - cmake
+      - libjsoncpp-dev
+      - curl
+      - libmosquitto-dev
+      - libmosquittopp-dev
       
       
 # env:
