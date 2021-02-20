@@ -2,7 +2,10 @@
 
 Dispatcher* gpDispatcher = 0;
 
-Dispatcher::Dispatcher() {}
+Dispatcher::Dispatcher() 
+{
+	*mModuleList = { 0 };
+}
 
 void Dispatcher::fRegisterThread(Module* thread)
 {
@@ -13,7 +16,7 @@ void Dispatcher::fRegisterThread(Module* thread)
 	}
 	else
 	{
-		logging::ERROR("DISPATCHER >> fRegisterThread() || Could not register module.", thread->fGetModuleName());
+		logging::ERROR("DISPATCHER >> fRegisterThread() || Thread limit [MAX_THREADS] exceeded.", thread->fGetModuleName());
 	}
 }
 

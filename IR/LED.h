@@ -33,7 +33,6 @@ class LED : public Remote
 
 	
 	State cState;
-	int lastTime;
 	unsigned int pos;
 	std::bitset<32> msg;
 

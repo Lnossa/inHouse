@@ -12,6 +12,6 @@ target_link_libraries(Utils PUBLIC
 )
 
 target_include_directories(Utils PUBLIC
-	"${PROJECT_SOURCE_DIR}/../"
-	"${PROJECT_SOURCE_DIR}/../packages/curl.7.30.0.2/build/native/include/")
+							"${PROJECT_SOURCE_DIR}/../"
+						  )
 	

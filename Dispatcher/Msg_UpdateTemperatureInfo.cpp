@@ -5,6 +5,7 @@ Msg_UpdateTemperatureInfo::Msg_UpdateTemperatureInfo(double temp, double hum, bo
 	: Msg(MsgType::MsgType_UpdateTemperatureInfo),
 	mSensorTemperature(temp),
 	mSensorHumidity(hum),
+	mSetTemperature(-275),
 	mIsHeating(isHeating)
 {
 }
@@ -31,8 +32,8 @@ bool Msg_UpdateTemperatureInfo::fGetIsHeating()
 
 void Msg_UpdateTemperatureInfo::fBuildFromMQTTMsg(Msg_IncomingMQTT* pMsg)
 {
-	const char* msgData = pMsg->fGetMessage().c_str();
-	mSetTemperature = std::stoi(msgData);
+	std::string msgData = pMsg->fGetMessage();
+	mSetTemperature = std::stoi(msgData.c_str());
 }
 
 std::shared_ptr<char> Msg_UpdateTemperatureInfo::fFormatAsJSON()

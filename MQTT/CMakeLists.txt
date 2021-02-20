@@ -10,8 +10,6 @@ MQTT.cpp
 target_link_libraries(MQTT PUBLIC $<TARGET_OBJECTS:Dispatcher>)
 
 
-target_include_directories(MQTT PUBLIC
-	"${PROJECT_SOURCE_DIR}/../"
-	"C:/SysGCC/raspberry/arm-linux-gnueabihf/sysroot/usr/include/"
-	#"${PROJECT_SOURCE_DIR}/../packages/mosquittopp.1.0.2/include"
-	)
+target_include_directories(MQTT PUBLIC 
+						   "${PROJECT_SOURCE_DIR}/../"
+						  )

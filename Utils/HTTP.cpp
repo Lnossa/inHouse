@@ -14,12 +14,10 @@ std::string HTTP::GET(std::string url)
 	curl_global_init(CURL_GLOBAL_ALL);
 	CURL* easyhandle = curl_easy_init();
 
-	curl_easy_setopt(easyhandle, CURLOPT_URL, url.c_str());
-	curl_easy_setopt(easyhandle, CURLOPT_WRITEFUNCTION, WriteCallback);
-	curl_easy_setopt(easyhandle, CURLOPT_WRITEDATA, &readBuffer);
-
-	curl_easy_perform(easyhandle);
-
+	if (curl_easy_setopt(easyhandle, CURLOPT_URL, url.c_str()) == CURLE_OK)
+		if (curl_easy_setopt(easyhandle, CURLOPT_WRITEFUNCTION, WriteCallback) == CURLE_OK)
+			if (curl_easy_setopt(easyhandle, CURLOPT_WRITEDATA, &readBuffer) == CURLE_OK)
+				curl_easy_perform(easyhandle);
 
 	curl_easy_cleanup(easyhandle);
 	curl_global_cleanup();

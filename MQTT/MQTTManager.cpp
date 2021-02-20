@@ -2,18 +2,18 @@
 
 MQTTManager::MQTTManager() : Module()
 {
+	pLightsMqtt = new Mqtt("LightsMqtt", "lightsTpc", "localhost", 1883);
+	pIncomingTempMqtt = new Mqtt("TempMqtt", "tempCmdTpc", "localhost", 1883);
+	pOutgoingTempMqtt = new Mqtt("SensorTempMqtt", "tempStTpc", "localhost", 1883);
+
 	fSetModuleId(MQTT);
 }
 
 void MQTTManager::fOnStart()
 {
-	pLightsMqtt = new Mqtt("LightsMqtt", "lightsTpc", "localhost", 1883);
 	pLightsMqtt->fSubscribe();
-
-	pIncomingTempMqtt = new Mqtt("TempMqtt", "tempCmdTpc", "localhost", 1883);
 	pIncomingTempMqtt->fSubscribe();
 
-	pOutgoingTempMqtt = new Mqtt("SensorTempMqtt", "tempStTpc", "localhost", 1883);
 }
 void MQTTManager::fProcessMessage(std::shared_ptr<Msg> msg)
 {

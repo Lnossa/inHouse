@@ -209,11 +209,15 @@ int sendCmd(int data)
 
 void printHex(int data)
 {
+	std::ios::fmtflags os_flags(std::cout.flags());
 	std::cout << " 0x" << std::hex << std::uppercase << std::setfill('0') << std::setw(4) << data << std::endl;
+	std::cout.flags(os_flags);
 }
 
 void printRXBuffer()
 {
+	std::ios::fmtflags os_flags(std::cout.flags());
+
 	std::cout << "Received " << rxCount << " messages: " << std::endl;
 	for(int i = 0; i < rxCount; i++)
 	{
@@ -225,6 +229,8 @@ void printRXBuffer()
 	}
 	rxCount = 0;
 	rxPos = 0;
+
+	std::cout.flags(os_flags);
 }
 
 void printStatus()

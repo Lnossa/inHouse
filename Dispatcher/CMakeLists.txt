@@ -15,4 +15,5 @@ Msg_UpdateWeather.cpp
 target_link_libraries(Dispatcher PUBLIC Logger)
 
 target_include_directories(Dispatcher PUBLIC
-						  "${PROJECT_SOURCE_DIR}/../")
+						  "${PROJECT_SOURCE_DIR}/../"
+						  )

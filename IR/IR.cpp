@@ -3,7 +3,10 @@
 bool receivedCmd = 0;
 ullong binMsg;
 
-IRManager::IRManager() : Module()
+IRManager::IRManager() : Module(),
+last(0),
+duration(0),
+binMsg(0)
 {
 	fSetModuleId(IR);
 }
