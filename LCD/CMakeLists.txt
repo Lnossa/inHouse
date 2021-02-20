@@ -8,5 +8,4 @@ $<TARGET_OBJECTS:Utils>
 
 target_include_directories(LCD PUBLIC
 						  "${PROJECT_SOURCE_DIR}/../"
-						  "${PROJECT_SOURCE_DIR}/../lib/wiringpi"
 						  )
