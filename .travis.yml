@@ -2,20 +2,18 @@ language: cpp
 compiler: g++
 arch: arm64
 os: linux
-dist: focal
+dist: xenial
 
 
 addons:
   apt:
-    sources:
-      - ubuntu-toolchain-r-test
     packages:
       - cmake
-      - libjsoncpp1
       - libjsoncpp-dev
       - curl
       - libmosquitto-dev
       - libmosquittopp-dev
+
       
       
 # env:
