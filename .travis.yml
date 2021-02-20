@@ -10,6 +10,8 @@ addons:
     packages:
       - cmake
       - wiringpi
+      - libwiringpi2
+      - libwiringpi-dev
       - libjsoncpp-dev
       - curl
       - libmosquitto-dev
