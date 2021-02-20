@@ -12,7 +12,7 @@ target_link_libraries(inHouse PUBLIC
 	$<TARGET_OBJECTS:Temp>
 	$<TARGET_OBJECTS:Utils>
 	pthread
-	wiringpi
+	wiringPi
 	mosquittopp
 	curl
 	jsoncpp
