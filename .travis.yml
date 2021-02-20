@@ -34,7 +34,7 @@ addons:
     # branch_pattern: master
 
 script: #chmod ugo+x build.sh && ./build.sh
-  - ln -s /usr/lib/aarch64-linux-gnu/libwiringPi.so  /usr/lib/libwiringPi.so
+  - sudo ln -s /usr/lib/aarch64-linux-gnu/libwiringPi.so  /usr/lib/libwiringPi.so
   - find /usr/lib/ -name "*wiring*"
   - cmake .
   - make
