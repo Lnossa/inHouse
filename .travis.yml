@@ -33,7 +33,7 @@ addons:
 
 script: #chmod ugo+x build.sh && ./build.sh
   - wget https://project-downloads.drogon.net/wiringpi-latest.deb
-  - dpkg -i wiringpi-latest.deb
+  - sudo dpkg -i wiringpi-latest.deb
   - gpio -v
   - ls /usr/include -la | grep wiring
   - gpio -v
