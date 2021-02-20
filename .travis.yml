@@ -32,7 +32,7 @@ addons:
     # branch_pattern: master
 
 script: #chmod ugo+x build.sh && ./build.sh
-  - ll /usr/include | grep wiring
+  - ls /usr/include -la | grep wiring
   - gpio -v
   - cmake --version
   - cmake .
