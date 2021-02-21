@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.13)
 cmake_policy(SET CMP0076 NEW)
 
 #Environment
+#set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wdeprecated-declarations")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic")
+
 
 set(CMAKE_SYSTEM_NAME Linux)
 

@@ -13,7 +13,7 @@ Mqtt::Mqtt(const char* _id, const char* _topic, const char* _host, int _port) : 
 		port,
 		keepalive); 
 	loop_start();            // Start thread managing connection / publish / subscribe
-};
+}
 
 
 Mqtt::~Mqtt() {

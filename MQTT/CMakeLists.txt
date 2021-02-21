@@ -13,3 +13,5 @@ target_link_libraries(MQTT PUBLIC $<TARGET_OBJECTS:Dispatcher>)
 target_include_directories(MQTT PUBLIC 
 						   "${PROJECT_SOURCE_DIR}/../"
 						  )
+						  
+target_compile_options(MQTT PRIVATE "-Wall;-Wno-deprecated-declarations")
