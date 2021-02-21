@@ -41,7 +41,13 @@ int main()
 
 	CreateLogFile();
 	
-	daemon(1, 1);
+	int res = daemon(1, 1);
+	if (res)
+	{
+		//failed
+		logging::ERROR("Function daemon() failed. Return code: %d", res);
+	}
+
 		
 	signal(SIGSEGV, fSigSegvHandler);
 		

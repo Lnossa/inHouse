@@ -14,10 +14,11 @@
 #include "LED.h"
 
 LED::LED(CallbackFunc cf) : 
-	Remote(cf)
+	Remote(cf),
+	pos(0)
 {
 	cState = RESET;
-};
+}
 
 
 bool LED::fIsInRange(const int& val, const int& range) {

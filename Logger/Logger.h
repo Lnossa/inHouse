@@ -254,31 +254,50 @@ namespace logging {
 		return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
 	}
 
-	//these standout when reading code
+	//TRACE
+	inline void TRACE(const std::string& message) {
+		get_logger().log(message, log_level::TRACE);
+	}
 	template<typename ... Args>
 	inline void TRACE(const std::string& message, Args ... args) {
 		get_logger().log(fFormat(message, args ...), log_level::TRACE);
-	};
+	}
 
+	//DEBUG
+	inline void DEBUG(const std::string& message) {
+		get_logger().log(message, log_level::DEBUG);
+	}
 	template<typename ... Args>
 	inline void DEBUG(const std::string& message, Args ... args) {
 		get_logger().log(fFormat(message, args ...), log_level::DEBUG);
-	};
+	}
 	
+	//INFO
+	inline void INFO(const std::string& message) {
+		get_logger().log(message, log_level::INFO);
+	}
 	template<typename ... Args>
 	inline void INFO(const std::string& message, Args ... args) {
 		get_logger().log(fFormat(message, args ...), log_level::INFO);
-	};
+	}
 	
+	//WARN
+	inline void WARN(const std::string& message) {
+		get_logger().log(message, log_level::WARN);
+	}
 	template<typename ... Args>
 	inline void WARN(const std::string& message, Args ... args) {
 		get_logger().log(fFormat(message, args ...), log_level::WARN);
-	};
+	}
 	
+	//ERROR
+	inline void ERROR(const std::string& message) {
+		get_logger().log(message, log_level::ERROR);
+	}
 	template<typename ... Args>
 	inline void ERROR(const std::string& message, Args ... args) {
 		get_logger().log(fFormat(message, args ...), log_level::ERROR);
-	};
+	}
 }
 
 #endif //__LOGGING_HPP__

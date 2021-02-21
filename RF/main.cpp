@@ -5,7 +5,6 @@
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
 #include <unistd.h>
-#include <pigpio.h>
 
 
 #define IRQ 25
