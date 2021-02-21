@@ -21,5 +21,5 @@ target_link_libraries(inHouse PUBLIC
 target_include_directories(inHouse PUBLIC
 						  "${PROJECT_SOURCE_DIR}/../"
 						  )
-						  
 
+target_compile_options(inHouse PRIVATE "-Wall;-Werror")

@@ -261,7 +261,7 @@ namespace logging {
 	template<typename ... Args>
 	inline void TRACE(const std::string& message, Args ... args) {
 		get_logger().log(fFormat(message, args ...), log_level::TRACE);
-	};
+	}
 
 	//DEBUG
 	inline void DEBUG(const std::string& message) {
@@ -270,7 +270,7 @@ namespace logging {
 	template<typename ... Args>
 	inline void DEBUG(const std::string& message, Args ... args) {
 		get_logger().log(fFormat(message, args ...), log_level::DEBUG);
-	};
+	}
 	
 	//INFO
 	inline void INFO(const std::string& message) {
@@ -279,7 +279,7 @@ namespace logging {
 	template<typename ... Args>
 	inline void INFO(const std::string& message, Args ... args) {
 		get_logger().log(fFormat(message, args ...), log_level::INFO);
-	};
+	}
 	
 	//WARN
 	inline void WARN(const std::string& message) {
@@ -288,7 +288,7 @@ namespace logging {
 	template<typename ... Args>
 	inline void WARN(const std::string& message, Args ... args) {
 		get_logger().log(fFormat(message, args ...), log_level::WARN);
-	};
+	}
 	
 	//ERROR
 	inline void ERROR(const std::string& message) {
@@ -297,7 +297,7 @@ namespace logging {
 	template<typename ... Args>
 	inline void ERROR(const std::string& message, Args ... args) {
 		get_logger().log(fFormat(message, args ...), log_level::ERROR);
-	};
+	}
 }
 
 #endif //__LOGGING_HPP__

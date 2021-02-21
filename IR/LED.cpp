@@ -18,7 +18,7 @@ LED::LED(CallbackFunc cf) :
 	pos(0)
 {
 	cState = RESET;
-};
+}
 
 
 bool LED::fIsInRange(const int& val, const int& range) {
