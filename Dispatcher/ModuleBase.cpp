@@ -14,21 +14,23 @@ Module::Module() :
 
 Module::~Module()
 {
+	fStopChildThreads();
 	fStopModule();
 }
 
 bool Module::fStartModule()
 {
+	bool res = false;
 	if (!mThread)
 	{
 		mThread = std::unique_ptr<std::thread>(new thread(&Module::fStart, this));
-		logging::INFO("Module %s started. Thread Id: %d", mModuleName, std::this_thread::get_id());
+		res = true;
 	}
 	else
 	{
 		logging::WARN("Module %s already started. Command ignored.", mModuleName);
 	}
-	return true;
+	return res;
 }
 
 void Module::fStopModule()
@@ -63,6 +65,7 @@ void Module::fPostMsg(std::shared_ptr<Msg> data)
 
 void Module::fStart()
 {
+	logging::INFO("Module %s started. Thread Id: %d.", mModuleName, std::this_thread::get_id());
 	fOnStart();
 	while (1)
 	{
@@ -91,7 +94,8 @@ void Module::fStart()
 
 			case MSG_EXIT_THREAD:
 			{
-				logging::INFO("Module %s stopped gracefully.", mModuleName);
+				logging::INFO("Module %s terminating", mModuleName);
+				fOnStop();
                 return;
 			}
 
@@ -122,6 +126,11 @@ void Module::fOnStart()
 	logging::ERROR("Default onStart ?! %s", mModuleName);
 }
 
+void Module::fOnStop()
+{
+	logging::ERROR("Default onStop ?! %s", mModuleName);
+}
+
 std::thread::id Module::fGetThreadId()
 {
 	assert(mThread != nullptr);
@@ -132,4 +141,22 @@ void Module::fSetModuleId(Id id)
 {
 	mModuleId = id;
 	mModuleName = mvModuleName[id].c_str();
+}
+
+void Module::fInteruptibleWait(unsigned int ms)
+{
+	std::unique_lock<std::mutex> lk(mChildMutex);
+	mChildCv.wait_for(lk, std::chrono::milliseconds(ms));
+}
+
+void Module::fStopChildThreads()
+{
+	mShouldExit = true;
+	std::unique_lock<std::mutex> lk(mChildMutex);
+	mChildCv.notify_all();
+}
+
+bool Module::fGetShouldExit()
+{
+	return mShouldExit;
 }

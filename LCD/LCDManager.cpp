@@ -9,7 +9,6 @@ LCDManager::LCDManager() : Module()
 
 void LCDManager::fOnStart()
 {
-	logging::INFO("LCDManager >> Started.");
 	mDateJob = std::unique_ptr<std::thread>(new std::thread(&LCDManager::fStartDateJob, this));
 }
 
@@ -43,10 +42,18 @@ void LCDManager::fProcessMessage(std::shared_ptr<Msg> msg)
 	}
 }
 
+void LCDManager::fOnStop()
+{
+	fStopChildThreads();
+	mDateJob->join();
+	gpDispatcher->fUnregisterThread(this);
+}
+
 
 void LCDManager::fStartDateJob() 
 {
-	while (true)
+	logging::TRACE("LCDManager >> DateJob || Start");
+	while (!fGetShouldExit())
 	{
 		Date dt;
 		logging::TRACE("LCDManager >> DateJob || Update time: %s", dt.fGetTimeAndDateString().c_str());
@@ -58,8 +65,9 @@ void LCDManager::fStartDateJob()
 		//ms to delay until next minute
 		int delayMs = (60 - dt.fGetSecond()) * 1000;
 
-		delay(delayMs);
+		fInteruptibleWait(delayMs);
 	}
+	logging::TRACE("LCDManager >> DateJob || Stopped");
 }
 
 void LCDManager::fPrintInsideTemp(double temp)

@@ -15,6 +15,7 @@ public :
 protected:
 	void fOnStart() override;
 	void fProcessMessage(std::shared_ptr<Msg> msg) override;
+	void fOnStop() override;
 
 private:
 	bool mIsHeating;
@@ -22,7 +23,7 @@ private:
 	double mInsideHumidity;
 	double mSetTemperature;
 
-	
+	bool mKeepJobsAlive;
 	std::unique_ptr<TempSensor> pTempSensor;
 	std::unique_ptr<std::thread> mWeatherJob;
 	std::unique_ptr<std::thread> mTemperatureJob;

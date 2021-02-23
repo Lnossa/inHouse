@@ -56,6 +56,14 @@ void MQTTManager::fProcessMessage(std::shared_ptr<Msg> msg)
 
 }
 
+void MQTTManager::fOnStop()
+{
+	pLightsMqtt->loop_stop(true);
+	pIncomingTempMqtt->loop_stop(true);
+	pOutgoingTempMqtt->loop_stop(true);
+	gpDispatcher->fUnregisterThread(this);
+}
+
 
 void MQTTManager::fProcessIncomingMQTT(Msg_IncomingMQTT* msg)
 {

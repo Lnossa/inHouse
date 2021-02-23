@@ -13,7 +13,9 @@ private:
 public:
 	Dispatcher();
 	void fRegisterThread(Module* thread);
+	void fUnregisterThread(Module* thread);
 	void fPostMessage(Module::Id moduleId, std::shared_ptr<Msg> msg);
+	Module* fGetModule(int id);
 };
 
 //Global pointer

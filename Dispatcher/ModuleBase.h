@@ -50,6 +50,10 @@ private:
 	std::queue<std::shared_ptr<ThreadMsg>> mQueue;
 	std::atomic<bool> mShouldExit;
 
+	//Used for child processes
+	std::mutex mChildMutex;
+	std::condition_variable mChildCv;
+
 	// Keep in sync with enum Id
 	std::vector<std::string> mvModuleName =	
 	{
@@ -70,10 +74,18 @@ private:
 	/// Entry point for the worker thread
 	void fStart();
 
+
+
 protected:
+	//Used for child processes
+	void fInteruptibleWait(unsigned int ms);
+	void fStopChildThreads();
+	bool fGetShouldExit();
+
 	//Methods that should be overridden
 	virtual void fOnStart();
 	virtual void fProcessMessage(std::shared_ptr<Msg> msg);
+	virtual void fOnStop();
 
 	//Thread related methods
 	std::thread::id fGetThreadId();

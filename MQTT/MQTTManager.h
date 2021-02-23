@@ -15,6 +15,7 @@ public:
 protected:
 	void fOnStart() override;
 	void fProcessMessage(std::shared_ptr<Msg> msg) override;
+	void fOnStop() override;
 
 private:
 	Mqtt* pLightsMqtt;

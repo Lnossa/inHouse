@@ -6,7 +6,7 @@
 #include <signal.h>
 #include <execinfo.h>
 
-#include "IR/IR.h"
+#include "IR/IRManager.h"
 #include "MQTT/MQTTManager.h"
 #include "LCD/LCDManager.h"
 #include "Temp/TemperatureManager.h"
@@ -14,10 +14,11 @@
 #include "Utils/Weather.h"
 #include "Utils/Date.h"
 #include "Logger/Logger.h"
-#include "IR/IR.h"
 
 void CreateLogFile();
 void fSigSegvHandler(int sig);
+void fSigIntHandler(int sig);
+void fSigTermHandler(int sig);
 
 
 int main()
@@ -50,8 +51,13 @@ int main()
 
 		
 	signal(SIGSEGV, fSigSegvHandler);
+	signal(SIGINT, fSigIntHandler);
+	signal(SIGTERM, fSigTermHandler);
 		
 	logging::INFO("Program start. Main Thread Id: %d", std::this_thread::get_id());
+
+	char* c = NULL;
+	char x = *c;
 
 	gpDispatcher = new Dispatcher;
 
@@ -91,16 +97,47 @@ int main()
 
 
 void fSigSegvHandler(int sig) {
+	int fd;
+	Date dt;
 	void* array[10];
 	size_t size;
+	char filename[30];
+	
+	snprintf(filename, 30, "log/crash/%04d%02d%02d_%02d%02d.crash",
+		dt.fGetYear(), dt.fGetMonth(), dt.fGetDay(), dt.fGetHour(), dt.fGetMinute());
+	fd = open(filename, O_CREAT | O_WRONLY);
 
 	// get void*'s for all entries on the stack
 	size = backtrace(array, 10);
-
-	// print out all the frames to stderr
-	logging::ERROR("Error: signal %d:\n", sig);
-	backtrace_symbols_fd(array, size, STDOUT_FILENO);
+	
+	// print out all the frames to file
+	logging::ERROR("Error: signal %d. See stack trace: %s", sig, filename);
+	backtrace_symbols_fd(array, size, fd);
+	
+	close(fd);
 	exit(1);
+}
+
+void fSigIntHandler(int sig)
+{
+	logging::INFO("SIGINT Received.");
+	Module* lpModule;
+	for (int i = 0; i < MAX_THREADS; i++)
+	{
+		if ((lpModule = gpDispatcher->fGetModule(i)) != 0)
+			lpModule->fStopModule();
+	}
+}
+
+void fSigTermHandler(int sig)
+{
+	logging::INFO("SIGTERM Received: %d", sig);
+	Module* lpModule;
+	for (int i = 0; i < MAX_THREADS; i++)
+	{
+		if ((lpModule = gpDispatcher->fGetModule(i)) != 0)
+			lpModule->fStopModule();
+	}
 }
 
 void CreateLogFile()

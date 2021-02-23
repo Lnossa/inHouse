@@ -2,12 +2,13 @@
 
 #include "TemperatureManager.h"
 
-TemperatureManager::TemperatureManager() : 
+TemperatureManager::TemperatureManager() :
 	Module(),
 	mIsHeating(false),
 	mInsideTemperature(-273),
 	mInsideHumidity(0),
-	mSetTemperature(-273)
+	mSetTemperature(-273),
+	mKeepJobsAlive(true)
 {
 	fSetModuleId(Temp);
 	pTempSensor = std::unique_ptr<TempSensor>(new TempSensor());
@@ -38,6 +39,13 @@ void TemperatureManager::fProcessMessage(std::shared_ptr<Msg> msg)
 		break;
 	}
 
+}
+
+void TemperatureManager::fOnStop()
+{
+	fStopChildThreads();
+	mTemperatureJob->join();
+	gpDispatcher->fUnregisterThread(this);
 }
 
 bool TemperatureManager::fCheckTemp()
@@ -97,7 +105,7 @@ void TemperatureManager::fStartWeatherJob()
 {
 	logging::TRACE("TemperatureManager >> Started weather job.");
 	Weather w;
-	while (true)
+	while (!fGetShouldExit())
 	{
 		w.fUpdateWeather();
 		if (w.fGetCurTemp() != -273)
@@ -110,26 +118,27 @@ void TemperatureManager::fStartWeatherJob()
 		{
 			std::cout << "Weather error" << std::endl;
 		}
-		std::this_thread::sleep_for(std::chrono::hours(1));
+		fInteruptibleWait(1000 * 3600); //1 hour
 	}
-
+	logging::TRACE("TemperatureManager >> Stopped weather job.");
 }
 
 void TemperatureManager::fStartTemperatureJob()
 {
 	logging::TRACE("TemperatureManager >> Started sensor job.");
-	while (true)
+	while (!fGetShouldExit())
 	{
-		std::chrono::minutes wait(10);
+		unsigned int wait = 10;
 		fReadFromSensor();
 		if (!fCheckTemp())
 		{
-			wait = std::chrono::minutes(1);
+			wait = 1;
 		}
 		Msg_UpdateTemperatureInfo msg(mInsideTemperature, mInsideHumidity, mIsHeating);
 		auto spMsg = std::make_shared<Msg_UpdateTemperatureInfo>(msg);
 		gpDispatcher->fPostMessage(Module::Id::LCD, spMsg);
 		gpDispatcher->fPostMessage(MQTT, spMsg);
-		std::this_thread::sleep_for(wait);
+		fInteruptibleWait(wait * 1000 * 60); //minutes
 	}
+	logging::TRACE("TemperatureManager >> Stopped sensor job.");
 }
