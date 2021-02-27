@@ -1,2 +1,2 @@
 project(RF)
-add_library(RF SHARED main.cpp)
+add_library(RF STATIC main.cpp)

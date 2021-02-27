@@ -1,5 +1,5 @@
 project(Dispatcher)
-add_library(Dispatcher OBJECT)
+add_library(Dispatcher STATIC)
 
 target_sources(Dispatcher PUBLIC
 Dispatcher.cpp
@@ -12,7 +12,7 @@ Msg_UpdateWeather.cpp
 )
 
 
-target_link_libraries(Dispatcher PUBLIC Logger)
+#target_link_libraries(Dispatcher PUBLIC Logger)
 
 target_include_directories(Dispatcher PUBLIC
 						  "${PROJECT_SOURCE_DIR}/../"

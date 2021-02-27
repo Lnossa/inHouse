@@ -15,6 +15,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LCD", "LCD\LCD.vcxproj", "{
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IR", "IR\IR.vcxproj", "{3D2909C1-7FE1-496D-B7E3-B42A12554683}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4A79B20A-4F97-4DED-8A73-CB34F10D51E2} = {4A79B20A-4F97-4DED-8A73-CB34F10D51E2}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RF", "RF\RF.vcxproj", "{51482B5C-5832-41DD-8AB0-21A55A70CB85}"
 EndProject

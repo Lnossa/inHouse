@@ -56,9 +56,6 @@ int main()
 		
 	logging::INFO("Program start. Main Thread Id: %d", std::this_thread::get_id());
 
-	char* c = NULL;
-	char x = *c;
-
 	gpDispatcher = new Dispatcher;
 
 	MQTTManager mqttModule;

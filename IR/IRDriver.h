@@ -2,6 +2,7 @@
 #include <bitset>
 #include <vector>
 #include <sstream>
+#include <Logger/Logger.h>
 #include "wiringPi.h"
 
 #define IN_PIN 7

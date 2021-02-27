@@ -85,12 +85,12 @@
     <ClInclude Include="IRDriver.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Dispatcher\Dispatcher.vcxproj">
       <Project>{4a79b20a-4f97-4ded-8a73-cb34f10d51e2}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>

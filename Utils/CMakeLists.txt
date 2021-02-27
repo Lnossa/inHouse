@@ -1,5 +1,5 @@
 project(Utils)
-add_library(Utils OBJECT)
+add_library(Utils STATIC)
 
 target_sources(Utils PUBLIC
 	Date.cpp
@@ -7,9 +7,9 @@ target_sources(Utils PUBLIC
 	Weather.cpp
 )
 
-target_link_libraries(Utils PUBLIC 
-	Logger
-)
+# target_link_libraries(Utils PUBLIC 
+	# Logger
+# )
 
 target_include_directories(Utils PUBLIC
 							"${PROJECT_SOURCE_DIR}/../"

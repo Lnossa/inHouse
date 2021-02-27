@@ -78,7 +78,6 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClCompile Include="Dispatcher.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="ModuleBase.cpp" />
     <ClCompile Include="Msg.cpp" />
     <ClCompile Include="Msg_IncomingMQTT.cpp" />

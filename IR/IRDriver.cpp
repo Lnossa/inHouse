@@ -28,6 +28,7 @@ void IRDriver::Init()
 {
 	if (!mInitialized)
 	{
+		pinMode(IN_PIN, INPUT);
 		wiringPiISR(IN_PIN, INT_EDGE_BOTH, &fIRRead);
 		pinMode(OUT_PIN, PWM_OUTPUT);
 		pwmSetMode(PWM_MODE_MS);
@@ -169,10 +170,10 @@ void IRDriver::fSend(const std::vector<int>& message)
 
 void IRDriver::fIRRead()
 {
-	std::cout << "fRead()" << std::endl;
+	
 	int time = micros();
 	duration = time - last;
-	std::cout << duration << std::endl;
+	logging::TRACE("IRDriver >> fRead() || Duration: %d", duration);
 	fReadPulse(duration);
 
 	last = time;
