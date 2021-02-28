@@ -7,18 +7,20 @@ Weather::Weather()
 	mMaxTemp = -273;
 	mIcon = -1;
 }
+// SH - 1869987
+// BV - 287345
 
 std::string Weather::fQueryCurrent()
 {
 	return HTTP::GET(
-		"http://dataservice.accuweather.com/currentconditions/v1/287345?apikey=zt5pWPCZDXJTACHKYAw5mCgjicOVlzJW"
+		"http://dataservice.accuweather.com/currentconditions/v1/1869987?apikey=zt5pWPCZDXJTACHKYAw5mCgjicOVlzJW"
 	);
 }
 
 std::string Weather::fQueryForecast()
 {
 	return HTTP::GET(
-		"http://dataservice.accuweather.com/forecasts/v1/daily/1day/287345?apikey=zt5pWPCZDXJTACHKYAw5mCgjicOVlzJW&metric=true"
+		"http://dataservice.accuweather.com/forecasts/v1/daily/1day/1869987?apikey=zt5pWPCZDXJTACHKYAw5mCgjicOVlzJW&metric=true"
 	);
 }
 

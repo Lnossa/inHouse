@@ -18,7 +18,7 @@ TemperatureManager::TemperatureManager() :
 
 void TemperatureManager::fOnStart()
 {
-	//mWeatherJob = std::unique_ptr<std::thread>(new std::thread(&TemperatureManager::fStartWeatherJob, this));
+	mWeatherJob = std::unique_ptr<std::thread>(new std::thread(&TemperatureManager::fStartWeatherJob, this));
 	mTemperatureJob = std::unique_ptr<std::thread>(new std::thread(&TemperatureManager::fStartTemperatureJob, this));	
 }
 

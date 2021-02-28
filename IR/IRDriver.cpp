@@ -75,8 +75,10 @@ void IRDriver::fReadPulse(const int& duration)
 	case DATA1:
 		if (fIsInRange(duration, DATALOW)) 
 		{
-			if (pos == msg.size()-1) 
+			if (pos == msg.size()) 
 			{
+				NECMsg nMsg(msg);
+				logging::TRACE("IRDriver >> NecMsg: Addr: %d(%02x), Cmd: %d(%02x)", nMsg.fGetAddr(), nMsg.fGetAddr(), nMsg.fGetCmd(), nMsg.fGetCmd());
 				mCallback(msg.to_ullong());
 				cState = RESET;
 			}
@@ -90,14 +92,16 @@ void IRDriver::fReadPulse(const int& duration)
 	case DATA2:
 		if (fIsInRange(duration, DATALOW))
 		{
-			msg[31-pos++] = 0;
+			msg[31-pos] = 0;
 			cState = DATA1;
+			pos++;
 			break;
 		} 
 		else if (fIsInRange(duration, DATAHIGH)) 
 		{
-			msg[31-pos++] = 1;
+			msg[31-pos] = 1;
 			cState = DATA1;
+			pos++;
 			break;
 		}
 		else cState = RESET;
@@ -134,25 +138,17 @@ std::vector<int> IRDriver::fBuildMessage(const std::string& hexMsg)
 
 	//Add footer
 	result.push_back(DATALOW);
-	result.push_back(STOPLOW);
+	//result.push_back(STOPLOW);
 	result.push_back(CTRHIGH);
-	result.push_back(CTRLOW);
+	//result.push_back(CTRLOW);
 	result.push_back(DATALOW);
-	result.push_back(STOPHIGH);
+	//result.push_back(STOPHIGH);
 	result.push_back(CTRHIGH);
-	result.push_back(CTRLOW);
+	//result.push_back(CTRLOW);
 	result.push_back(DATALOW);
 
 	return result;
 }
-
-
-
-void IRDriver::fAddPreamble(std::string msg)
-{
-	msg = "00F7" + msg;
-}
-
 
 void IRDriver::fSend(const std::vector<int>& message)
 {
@@ -180,10 +176,47 @@ void IRDriver::fIRRead()
 }
 
 
-
-
 bool IRDriver::fIsInRange(const int& val, const int& range) {
 	int err = range / 100 * ERR;
 
 	return (val > range - err && val < range + err);
+}
+
+
+//======================================================================
+//======================================================================
+
+NECMsg::NECMsg(std::bitset<32> msg) :
+	mValid(0),
+	mAddress(0),
+	mCommand(0)
+{
+	ullong lvMsg = msg.to_ullong();
+	uint8_t lvAddr, lvAddrInv, lvCmd, lvCmdInv;
+
+
+	lvAddr = (lvMsg >> 24) & 0xFF;
+	lvAddrInv = ~(lvMsg >> 16) & 0xFF;
+	lvCmd = (lvMsg >> 8) & 0xFF;
+	lvCmdInv = ~lvMsg & 0xFF;
+	
+	if(lvAddr == lvAddrInv)
+	{
+		if(lvCmd == lvCmdInv)
+		{
+			mAddress = lvAddr;
+			mCommand = lvCmd;
+			mValid = true;
+		}
+	}
+}
+
+uint8_t NECMsg::fGetAddr() const
+{
+	return mAddress;
+}
+
+uint8_t NECMsg::fGetCmd() const
+{
+	return mCommand;
 }

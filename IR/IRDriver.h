@@ -19,15 +19,31 @@ typedef void (*CallbackFunc)(ullong msg);
 **********************************/
 class IRDriver 
 {
+
+	/*
+	NEC PROTOCOL:
+		Data packet:
+			- a 9ms leading pulse burst (16 times the pulse burst length used for a logical data bit)
+			- a 4.5ms space
+			- the 8-bit address for the receiving device
+			- the 8-bit logical inverse of the address
+			- the 8-bit command
+			- the 8-bit logical inverse of the command
+			- a final 562.5µs pulse burst to signify the end of message transmission.
+
+		Data Format:
+			- Logical '0' – a 562.5µs pulse burst followed by a 562.5µs space, with a total transmit time of 1.125ms
+			- Logical '1' – a 562.5µs pulse burst followed by a 1.6875ms space, with a total transmit time of 2.25ms
+	*/
 	enum Range
 	{
-		DATALOW = 620,
-		DATAHIGH = 1680,
-		CTRLOW = 2400,
-		CTRMED = 4300,
-		CTRHIGH = 9100,
-		STOPLOW = 39000,
-		STOPHIGH = 94000
+		DATALOW = 562,
+		DATAHIGH = 1687,
+		//CTRLOW = 2400,
+		CTRMED = 4500,
+		CTRHIGH = 9000,
+		//STOPLOW = 39000,
+		//STOPHIGH = 94000
 	};
 
 	enum State 
@@ -59,7 +75,6 @@ private:
 
 	//send
 	void fSend(const std::vector<int>& message);
-	void fAddPreamble(std::string msg);
 	std::vector<int> fBuildMessage(const std::string& hexMsg);
 	
 
@@ -89,4 +104,22 @@ public:
 	//Copy and assignment constructors illegal
 	IRDriver(IRDriver const&) = delete;
 	void operator=(IRDriver const&) = delete;
+};
+
+//Used for decoding and verifying data contained in NEC IR packets
+class NECMsg
+{
+
+public:
+
+	NECMsg() = delete;
+	NECMsg(std::bitset<32> msg);
+
+	uint8_t fGetAddr() const;
+	uint8_t fGetCmd() const;
+
+private:
+	bool 	mValid;
+	uint8_t mAddress;
+	uint8_t mCommand;
 };

@@ -59,5 +59,5 @@ void IRManager::fOnStop()
 //Called by driver on incoming IR data.
 void fIRReceived(ullong data)
 {
-	logging::TRACE("IR Received: %X", data);
+	logging::TRACE("IR Received: %d", data);
 }
