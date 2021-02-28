@@ -20,9 +20,3 @@ add_subdirectory(MQTT)
 add_subdirectory(RF)
 add_subdirectory(Temp)
 add_subdirectory(inHouse)
-
-# add the binary tree to the search path for include files
-# target_include_directories(Logger PUBLIC
-                          # "${PROJECT_BINARY_DIR}"
-						  # "${PROJECT_SOURCE_DIR}"
-                          # )
