@@ -10,8 +10,9 @@
 
 #define ERR 20
 
+class NECMsg;
 typedef unsigned long long ullong;
-typedef void (*CallbackFunc)(ullong msg);
+typedef void (*CallbackFunc)(NECMsg msg);
 
 /*********************************
 * IR driver class - Singleton    *
@@ -60,10 +61,13 @@ public:
 	static IRDriver& getInstance();
 
 	//Send IR message
-	void fIRSend(const std::string& msg);
+	void fIRSend(NECMsg* ipNecMsg);
 
 	//Set this to receive IR data from driver
 	void fSetCallback(CallbackFunc cf);
+
+	void fEnableReceiver();
+	void fDisableReceiver();
 
 private:
 
@@ -75,7 +79,7 @@ private:
 
 	//send
 	void fSend(const std::vector<int>& message);
-	std::vector<int> fBuildMessage(const std::string& hexMsg);
+	std::vector<int> fBuildMessage(NECMsg* msg);
 	
 
 	//receive (static)
@@ -113,7 +117,13 @@ class NECMsg
 public:
 
 	NECMsg() = delete;
-	NECMsg(std::bitset<32> msg);
+	NECMsg(ullong iMsg);
+	NECMsg(std::bitset<32> iMsg);
+	NECMsg(uint8_t iAddr, uint8_t iCmd);
+
+	bool fDecode(ullong iMsg);
+	std::bitset<32> fEncode();
+	
 
 	uint8_t fGetAddr() const;
 	uint8_t fGetCmd() const;

@@ -52,7 +52,7 @@ void Weather::fUpdateWeather()
 			}
 			catch(int e)
 			{
-				
+				logging::ERROR("Utils Weather || Forecast parsing error. %s \n", sForecastJson);
 			}
 		}
 	}
@@ -67,7 +67,7 @@ void Weather::fUpdateWeather()
 		}
 		catch (int e)
 		{
-
+				logging::ERROR("Utils Weather || Current parsing error. %s \n", sCurrentJson);
 		}
 	}
 

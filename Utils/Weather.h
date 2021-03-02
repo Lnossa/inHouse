@@ -6,6 +6,7 @@
 
 #include "HTTP.h"
 #include "Date.h"
+#include <Logger/Logger.h>
 
 class Weather
 {

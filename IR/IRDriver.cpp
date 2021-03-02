@@ -28,8 +28,8 @@ void IRDriver::Init()
 {
 	if (!mInitialized)
 	{
-		pinMode(IN_PIN, INPUT);
-		wiringPiISR(IN_PIN, INT_EDGE_BOTH, &fIRRead);
+		wiringPiISR(IN_PIN, INT_EDGE_SETUP, &fIRRead);
+//		pinMode(IN_PIN, OUTPUT);
 		pinMode(OUT_PIN, PWM_OUTPUT);
 		pwmSetMode(PWM_MODE_MS);
 		pwmSetClock(84);
@@ -39,9 +39,24 @@ void IRDriver::Init()
 	}
 }
 
-void IRDriver::fIRSend(const std::string& msg)
+void IRDriver::fEnableReceiver()
 {
-	std::vector<int> message = fBuildMessage(msg);
+	logging::INFO("IRDriver >> Enabled receiver.");
+	//pinMode(IN_PIN, INPUT);
+	system("/usr/bin/gpio edge 4 both");
+}
+
+void IRDriver::fDisableReceiver()
+{
+	logging::INFO("IRDriver >> Disabled receiver.");
+	//This is currently the only way to disable an interrupt trigger
+	//Pins in sys mode use BCM numbering 7 -> 4
+	system("/usr/bin/gpio edge 4 none");
+}
+
+void IRDriver::fIRSend(NECMsg* ipNecMsg)
+{
+	std::vector<int> message = fBuildMessage(ipNecMsg);
 
 	fSend(message);
 	fSend(message);
@@ -78,8 +93,7 @@ void IRDriver::fReadPulse(const int& duration)
 			if (pos == msg.size()) 
 			{
 				NECMsg nMsg(msg);
-				logging::TRACE("IRDriver >> NecMsg: Addr: %d(%02x), Cmd: %d(%02x)", nMsg.fGetAddr(), nMsg.fGetAddr(), nMsg.fGetCmd(), nMsg.fGetCmd());
-				mCallback(msg.to_ullong());
+				mCallback(msg);
 				cState = RESET;
 			}
 			cState = DATA2;
@@ -112,18 +126,12 @@ void IRDriver::fReadPulse(const int& duration)
 }
 
 
-std::vector<int> IRDriver::fBuildMessage(const std::string& hexMsg)
+std::vector<int> IRDriver::fBuildMessage(NECMsg* ipMsg)
 {
 	std::vector<int> result;
 
-	//Convert hex string to int
-	ullong ullongMsg;
-	std::stringstream ss;
-	ss << std::hex << hexMsg;
-	ss >> ullongMsg;
-
 	//int to bitset
-	std::bitset<33> bitsetMsg = std::bitset<33>(ullongMsg);
+	std::bitset<32> bitsetMsg = ipMsg->fEncode();
 
 	//Add header
 	result.push_back(CTRHIGH);
@@ -138,14 +146,14 @@ std::vector<int> IRDriver::fBuildMessage(const std::string& hexMsg)
 
 	//Add footer
 	result.push_back(DATALOW);
-	//result.push_back(STOPLOW);
-	result.push_back(CTRHIGH);
-	//result.push_back(CTRLOW);
-	result.push_back(DATALOW);
-	//result.push_back(STOPHIGH);
-	result.push_back(CTRHIGH);
-	//result.push_back(CTRLOW);
-	result.push_back(DATALOW);
+	// //result.push_back(STOPLOW);
+	// result.push_back(CTRHIGH);
+	// //result.push_back(CTRLOW);
+	// result.push_back(DATALOW);
+	// //result.push_back(STOPHIGH);
+	// result.push_back(CTRHIGH);
+	// //result.push_back(CTRLOW);
+	// result.push_back(DATALOW);
 
 	return result;
 }
@@ -169,7 +177,6 @@ void IRDriver::fIRRead()
 	
 	int time = micros();
 	duration = time - last;
-	logging::TRACE("IRDriver >> fRead() || Duration: %d", duration);
 	fReadPulse(duration);
 
 	last = time;
@@ -186,19 +193,50 @@ bool IRDriver::fIsInRange(const int& val, const int& range) {
 //======================================================================
 //======================================================================
 
-NECMsg::NECMsg(std::bitset<32> msg) :
+NECMsg::NECMsg(ullong iMsg) :
 	mValid(0),
 	mAddress(0),
 	mCommand(0)
 {
-	ullong lvMsg = msg.to_ullong();
+	fDecode(iMsg);
+}
+
+NECMsg::NECMsg(std::bitset<32> iMsg) :
+	mValid(0),
+	mAddress(0),
+	mCommand(0)
+{
+	ullong lvMsg = iMsg.to_ullong();
+	fDecode(lvMsg);
+}
+
+NECMsg::NECMsg(uint8_t iAddr, uint8_t iCmd) :
+ mValid(1),
+ mAddress(iAddr),
+ mCommand(iCmd)
+{
+}
+
+std::bitset<32> NECMsg::fEncode()
+{
+	ullong lvCodedMsg = 0;
+
+	lvCodedMsg |= ~mCommand & 0xFF;
+	lvCodedMsg |= (mCommand << 8);
+	lvCodedMsg |= ((~mAddress & 0xFF) << 16);
+	lvCodedMsg |= (mAddress << 24);
+
+	return std::bitset<32>(lvCodedMsg);
+}
+
+bool NECMsg::fDecode(ullong iMsg)
+{
 	uint8_t lvAddr, lvAddrInv, lvCmd, lvCmdInv;
 
-
-	lvAddr = (lvMsg >> 24) & 0xFF;
-	lvAddrInv = ~(lvMsg >> 16) & 0xFF;
-	lvCmd = (lvMsg >> 8) & 0xFF;
-	lvCmdInv = ~lvMsg & 0xFF;
+	lvAddr = (iMsg >> 24) & 0xFF;
+	lvAddrInv = ~(iMsg >> 16) & 0xFF;
+	lvCmd = (iMsg >> 8) & 0xFF;
+	lvCmdInv = ~iMsg & 0xFF;
 	
 	if(lvAddr == lvAddrInv)
 	{
@@ -209,6 +247,7 @@ NECMsg::NECMsg(std::bitset<32> msg) :
 			mValid = true;
 		}
 	}
+	return mValid;
 }
 
 uint8_t NECMsg::fGetAddr() const

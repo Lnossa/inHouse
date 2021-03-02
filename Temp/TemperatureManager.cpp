@@ -18,7 +18,9 @@ TemperatureManager::TemperatureManager() :
 
 void TemperatureManager::fOnStart()
 {
+	#ifdef NDEBUG
 	mWeatherJob = std::unique_ptr<std::thread>(new std::thread(&TemperatureManager::fStartWeatherJob, this));
+	#endif
 	mTemperatureJob = std::unique_ptr<std::thread>(new std::thread(&TemperatureManager::fStartTemperatureJob, this));	
 }
 
@@ -116,7 +118,7 @@ void TemperatureManager::fStartWeatherJob()
 		}
 		else
 		{
-			std::cout << "Weather error" << std::endl;
+			logging::ERROR("TemperatureManager >> Weather Job || Weather error.");
 		}
 		fInteruptibleWait(1000 * 3600); //1 hour
 	}

@@ -21,6 +21,10 @@ void fSigIntHandler(int sig);
 void fSigTermHandler(int sig);
 
 
+bool shouldExit = false;
+std::condition_variable cv;
+std::mutex mutex;
+
 int main()
 {
 	FILE* fLock;
@@ -76,7 +80,7 @@ int main()
 	
 
 
-	while (true)
+	while (!shouldExit)
 	{
 		//Wait until 12 AM
 		Date dt;
@@ -85,11 +89,16 @@ int main()
 		tomorrow->tm_hour = 0;
 		tomorrow->tm_min = 0;
 		tomorrow->tm_sec = 0;
-		std::this_thread::sleep_until(std::chrono::system_clock::from_time_t(mktime(tomorrow)));
-		std::this_thread::sleep_for(std::chrono::hours(24));
-		
-		CreateLogFile();
+
+		std::unique_lock<std::mutex> lk(mutex);
+		cv.wait_until(lk, std::chrono::system_clock::from_time_t(mktime(tomorrow)));
+
+		//Create new log file
+		if(!shouldExit)
+			CreateLogFile();
 	}
+
+	logging::INFO("Exiting...");
 }
 
 
@@ -118,23 +127,37 @@ void fSigSegvHandler(int sig) {
 void fSigIntHandler(int sig)
 {
 	logging::INFO("SIGINT Received.");
+
+	//Stop modules
 	Module* lpModule;
 	for (int i = 0; i < MAX_THREADS; i++)
 	{
 		if ((lpModule = gpDispatcher->fGetModule(i)) != 0)
 			lpModule->fStopModule();
 	}
+	
+	//Stop main
+	shouldExit = true;
+	std::unique_lock<std::mutex> lk(mutex);
+	cv.notify_one();
 }
 
 void fSigTermHandler(int sig)
 {
 	logging::INFO("SIGTERM Received: %d", sig);
+
+	//Stop modules
 	Module* lpModule;
 	for (int i = 0; i < MAX_THREADS; i++)
 	{
 		if ((lpModule = gpDispatcher->fGetModule(i)) != 0)
 			lpModule->fStopModule();
 	}
+
+	//Stop main
+	shouldExit = true;
+	std::unique_lock<std::mutex> lk(mutex);
+	cv.notify_one();
 }
 
 void CreateLogFile()

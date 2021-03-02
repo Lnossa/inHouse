@@ -6,3 +6,7 @@ target_sources(Utils PRIVATE
 	HTTP.cpp
 	Weather.cpp
 )
+
+target_include_directories(Utils PUBLIC
+						  "${PROJECT_SOURCE_DIR}/../"
+						  )
