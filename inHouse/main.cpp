@@ -99,6 +99,7 @@ int main()
 	}
 
 	logging::INFO("Exiting...");
+	return 0;
 }
 
 
@@ -121,7 +122,7 @@ void fSigSegvHandler(int sig) {
 	backtrace_symbols_fd(array, size, fd);
 	
 	close(fd);
-	exit(1);
+	exit(sig);
 }
 
 void fSigIntHandler(int sig)

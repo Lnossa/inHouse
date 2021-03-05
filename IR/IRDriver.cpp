@@ -29,7 +29,6 @@ void IRDriver::Init()
 	if (!mInitialized)
 	{
 		wiringPiISR(IN_PIN, INT_EDGE_SETUP, &fIRRead);
-//		pinMode(IN_PIN, OUTPUT);
 		pinMode(OUT_PIN, PWM_OUTPUT);
 		pwmSetMode(PWM_MODE_MS);
 		pwmSetClock(84);
@@ -41,17 +40,16 @@ void IRDriver::Init()
 
 void IRDriver::fEnableReceiver()
 {
-	logging::INFO("IRDriver >> Enabled receiver.");
-	//pinMode(IN_PIN, INPUT);
 	system("/usr/bin/gpio edge 4 both");
+	logging::INFO("IRDriver >> Enabled receiver.");
 }
 
 void IRDriver::fDisableReceiver()
 {
-	logging::INFO("IRDriver >> Disabled receiver.");
 	//This is currently the only way to disable an interrupt trigger
 	//Pins in sys mode use BCM numbering 7 -> 4
 	system("/usr/bin/gpio edge 4 none");
+	logging::INFO("IRDriver >> Disabled receiver.");
 }
 
 void IRDriver::fIRSend(NECMsg* ipNecMsg)
@@ -62,6 +60,9 @@ void IRDriver::fIRSend(NECMsg* ipNecMsg)
 	fSend(message);
 
 	pwmWrite(OUT_PIN, 0);
+
+	logging::INFO("IRDriver >> Sent: Addr: 0x%02X, Data: 0x%02X", ipNecMsg->fGetAddr(), ipNecMsg->fGetCmd());
+	delete ipNecMsg;
 }
 
 void IRDriver::fSetCallback(CallbackFunc cf)
@@ -128,10 +129,11 @@ void IRDriver::fReadPulse(const int& duration)
 
 std::vector<int> IRDriver::fBuildMessage(NECMsg* ipMsg)
 {
-	std::vector<int> result;
 
-	//int to bitset
+	std::vector<int> result;
 	std::bitset<32> bitsetMsg = ipMsg->fEncode();
+
+	
 
 	//Add header
 	result.push_back(CTRHIGH);
@@ -146,14 +148,6 @@ std::vector<int> IRDriver::fBuildMessage(NECMsg* ipMsg)
 
 	//Add footer
 	result.push_back(DATALOW);
-	// //result.push_back(STOPLOW);
-	// result.push_back(CTRHIGH);
-	// //result.push_back(CTRLOW);
-	// result.push_back(DATALOW);
-	// //result.push_back(STOPHIGH);
-	// result.push_back(CTRHIGH);
-	// //result.push_back(CTRLOW);
-	// result.push_back(DATALOW);
 
 	return result;
 }

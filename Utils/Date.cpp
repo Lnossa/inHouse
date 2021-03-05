@@ -120,7 +120,7 @@ std::string Date::fGetWeekDayString()
 		sWD = "Tue";
 		break;
 	case 3:
-		sWD = "Wen";
+		sWD = "Wed";
 		break;
 	case 4:
 		sWD = "Thu";

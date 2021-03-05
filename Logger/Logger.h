@@ -19,8 +19,9 @@ g++ -std=c++11 -x c++ -pthread -DLOGGING_LEVEL_ALL -DTEST_LOGGING logging.hpp -o
 #include <ctime>
 #include <cstdlib>
 
-
+#ifndef NDEBUG
 #define LOGGING_LEVEL_ALL
+#endif
 
 namespace logging {
 
