@@ -40,16 +40,20 @@ void IRDriver::Init()
 
 void IRDriver::fEnableReceiver()
 {
-	system("/usr/bin/gpio edge 4 both");
-	logging::INFO("IRDriver >> Enabled receiver.");
+	if(system("/usr/bin/gpio edge 4 both") == 0)
+	{
+		logging::INFO("IRDriver >> Enabled receiver.");
+	}
 }
 
 void IRDriver::fDisableReceiver()
 {
 	//This is currently the only way to disable an interrupt trigger
 	//Pins in sys mode use BCM numbering 7 -> 4
-	system("/usr/bin/gpio edge 4 none");
-	logging::INFO("IRDriver >> Disabled receiver.");
+	if(system("/usr/bin/gpio edge 4 none") == 0)
+	{
+		logging::INFO("IRDriver >> Disabled receiver.");
+	}
 }
 
 void IRDriver::fIRSend(NECMsg* ipNecMsg)
