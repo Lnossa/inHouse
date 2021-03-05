@@ -112,7 +112,7 @@ void fSigSegvHandler(int sig) {
 	
 	snprintf(filename, 30, "log/crash/%04d%02d%02d_%02d%02d.crash",
 		dt.fGetYear(), dt.fGetMonth(), dt.fGetDay(), dt.fGetHour(), dt.fGetMinute());
-	fd = open(filename, O_CREAT | O_WRONLY);
+	fd = open(filename, O_CREAT | O_WRONLY, 400);
 
 	// get void*'s for all entries on the stack
 	size = backtrace(array, 10);
